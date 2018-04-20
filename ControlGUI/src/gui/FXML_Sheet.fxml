@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.RadioMenuItem?>
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.Controller">
@@ -22,7 +25,6 @@
                   <RadioMenuItem mnemonicParsing="false" text="Forward Pathes" toggleGroup="$drawMode" />
                   <RadioMenuItem mnemonicParsing="false" text="Parallel pathes &amp; Feedbacks" toggleGroup="$drawMode" />
                   <RadioMenuItem mnemonicParsing="false" text="Free Nodes" toggleGroup="$drawMode" />
-                  <RadioMenuItem mnemonicParsing="false" text="Self Loops" toggleGroup="$drawMode" />
                   <RadioMenuItem mnemonicParsing="false" selected="true" text="None" toggleGroup="$drawMode" />
                </items>
           </Menu>
@@ -30,7 +32,15 @@
       </MenuBar>
    </top>
    <left>
-      <VBox prefHeight="368.0" prefWidth="141.0" BorderPane.alignment="CENTER" />
+      <VBox prefHeight="368.0" prefWidth="141.0" BorderPane.alignment="CENTER">
+         <children>
+            <Region VBox.vgrow="ALWAYS" />
+            <Button fx:id="calculateResult" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" text="Calculate Result" textAlignment="CENTER">
+               <VBox.margin>
+                  <Insets bottom="10.0" left="8.0" />
+               </VBox.margin>
+            </Button>
+         </children></VBox>
    </left>
    <center>
       <AnchorPane fx:id="pane" onMouseClicked="#paneClicked" onMouseMoved="#hanleMouseMoving" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #e6e5e5;" BorderPane.alignment="CENTER" />

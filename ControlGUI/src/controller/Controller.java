@@ -1,35 +1,25 @@
 package controller;
 
 import java.awt.AWTException;
-import java.awt.HeadlessException;
 import java.awt.Robot;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Observable;
 import java.util.ResourceBundle;
 
-import gui.AlertBox;
 import gui.Edge;
 import gui.InputBox;
 import gui.Node;
 import javafx.collections.ObservableList;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
-import javafx.scene.shape.CubicCurve;
-import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
-import javafx.scene.shape.SVGPath;
-import javafx.scene.shape.TriangleMesh;
+
 
 public class Controller implements Initializable {
 	enum mode {
@@ -41,7 +31,8 @@ public class Controller implements Initializable {
 	Node[] fpNodes = new Node[2];
 	public AnchorPane pane;
 	public ToggleGroup drawMode;
-
+	public Button calculateResult;
+	
 	private ArrayList<Node> allNodes = new ArrayList<>();
 	private ArrayList<Edge> forwardPathes = new ArrayList<>();
 	private ArrayList<Edge> fpPathes = new ArrayList<>();
