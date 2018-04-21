@@ -19,6 +19,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
+import javafx.scene.shape.SVGPath;
 
 
 public class Controller implements Initializable {
@@ -42,9 +43,11 @@ public class Controller implements Initializable {
 	private int numberOfEdges = 0;
 	private int numberOfFPEdges = 0;
 	private boolean hieghtClick = false;
+	private Edge effect;
+	private Polygon arrowEffect;
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-
+		
 	}
 
 	public void paneClicked(MouseEvent e) {
@@ -72,6 +75,8 @@ public class Controller implements Initializable {
 
 	}
 	public void hanleMouseMoving (MouseEvent e){
+		pane.getChildren().remove(effect);
+		pane.getChildren().remove(arrowEffect);
 		mode currentMode = getSuitableAction(drawMode);
 		if(currentMode == mode.nodes && !allNodes.isEmpty()) {
 			resetCounters();
@@ -81,6 +86,10 @@ public class Controller implements Initializable {
 			} catch (AWTException e1) {
 				e1.printStackTrace();
 			}
+		} else if(currentMode == mode.forwardPathes) {
+			forwardVisualEffect(e);
+		} else if(currentMode == mode.fpPathes) {
+			fpVisualEffect(e);
 		}
 	}
 	
@@ -216,6 +225,10 @@ public class Controller implements Initializable {
 		String path = new String("M "+mx + " " + my + " L " + cx1 + " " + cy1 + ", "+cx2 + " " + cy2+", "+ex + " " + ey);
 		return path;
 	}
+	private String getLine(int mx, int my, int lx1, int ly1) {
+		String path = new String("M "+mx + " " + my + " L " + lx1 + " " + ly1);
+		return path;
+	}
 
 	private mode getSuitableAction(ObservableList<Toggle> modes) {
 		if (modes.get(0).isSelected()) {
@@ -299,9 +312,53 @@ public class Controller implements Initializable {
 		});
 		return arrow;
 	}
+	
 	private void resetCounters() {
 		forwardStep = 0;
 		fpStep = 0;
 	}
 	
+	private void forwardVisualEffect(MouseEvent e) {
+		if(forwardStep == 1) {
+			effect = new Edge();
+			effect.setFill(Color.TRANSPARENT);
+			effect.setStroke(Color.BLACK);
+			effect.setContent(getLine((int)forwardPathNodeVisited[0].getCenterX(), (int)forwardPathNodeVisited[0].getCenterY(),
+					(int)e.getX() - 1, (int)e.getY() - 1));
+			pane.getChildren().add(effect);
+		}
+		
+	}
+	
+	private void fpVisualEffect(MouseEvent e) {
+		if(fpStep == 1) {
+			effect = new Edge();
+			effect.setFill(Color.TRANSPARENT);
+			effect.setStroke(Color.BLACK);
+			effect.setContent(getLine((int)fpNodes[0].getCenterX(), (int)fpNodes[0].getCenterY(),
+					(int)e.getX() - 1, (int)e.getY() - 1));
+			pane.getChildren().add(effect);
+		} else if (fpStep == 2) {
+			effect = new Edge();
+			effect.setFill(Color.TRANSPARENT);
+			effect.setStroke(Color.BLACK);
+			setfpCordinates(effect,e);
+			
+			
+			
+			String path = getPath(effect.getStartX(), effect.getStartY(),effect.getStartX(),(int)e.getY(),effect.getEndX()
+						,(int)e.getY(), effect.getEndX(), effect.getEndY());
+			effect.setContent(path);
+			
+			effect.setIndex(numberOfFPEdges++);
+			
+			
+			
+			arrowEffect = getSuitableArrow(fpNodes[1],effect);
+			
+			
+			pane.getChildren().addAll(effect,arrowEffect);
+		
+		}
+	}
 }
