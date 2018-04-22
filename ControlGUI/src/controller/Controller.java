@@ -50,9 +50,7 @@ public class Controller implements Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
 		calculateResult.setOnAction(e -> {
 			SFGAdapter sfg = new SFGAdapter(numberOfNode, allNodes);
-			ArrayList<ArrayList<Integer>> forwardpathes = sfg.getAllForwarPaths();
-			ArrayList<ArrayList<Integer>> allLoops = sfg.getAllLoops();
-			screen.setText(forwardpathes.toString() + allLoops.toString());
+			screen.setText(sfg.getResult());
 		});
 	}
 

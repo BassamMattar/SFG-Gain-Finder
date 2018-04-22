@@ -18,6 +18,7 @@ public class SFGAdapter {
 		sfg = new SFG(nNodes);
 		for(Node parentNode : connections) {
 			for(int i = 0; i < parentNode.getIncidents().size();i++) {
+				System.out.println(parentNode.getIndex() + " " + parentNode.getIncidents().get(i).getIndex() + " " + parentNode.getIncidentEdges().get(i).getGainValue());
 				sfg.connectXToY(parentNode.getIndex(), parentNode.getIncidents().get(i).getIndex(),
 						parentNode.getIncidentEdges().get(i).getGainValue());
 			}
@@ -30,5 +31,9 @@ public class SFGAdapter {
 	
 	public ArrayList<ArrayList<Integer>> getAllLoops() {
 		return sfg.getAllLoops();
+	}
+	
+	public String getResult() {
+		return sfg.getResult();
 	}
 }
