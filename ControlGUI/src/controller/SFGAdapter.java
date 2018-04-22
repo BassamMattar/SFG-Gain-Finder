@@ -16,6 +16,7 @@ public class SFGAdapter {
 	
 	public SFGAdapter(int nNodes, ArrayList<Node> connections) {
 		sfg = new SFG(nNodes);
+		System.out.println(nNodes);
 		for(Node parentNode : connections) {
 			for(int i = 0; i < parentNode.getIncidents().size();i++) {
 				System.out.println(parentNode.getIndex() + " " + parentNode.getIncidents().get(i).getIndex() + " " + parentNode.getIncidentEdges().get(i).getGainValue());

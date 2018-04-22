@@ -147,13 +147,13 @@ public class SFG implements SFGI {
 		StringBuilder result = new StringBuilder();
 		ArrayList<ArrayList<Integer>> fp = this.getAllForwardPaths();
 		ArrayList<ArrayList<Integer>> nonRL = this.getAllLoops();
-		//ArrayList<ArrayList<Integer>>[] com = this.getAllNoneTouchingLoops(nonRL);
-		//float OverallGain = this.getOverAllGain(fp, nonRL, com);
-		//float delta = this.getDeltaGain(nonRL, com);
-		/*float[] forwardPathsDeltas = new float[fp.size()];
+		ArrayList<ArrayList<Integer>>[] com = this.getAllNoneTouchingLoops(nonRL);
+		float OverallGain = this.getOverAllGain(fp, nonRL, com);
+		float delta = this.getDeltaGain(nonRL, com);
+		float[] forwardPathsDeltas = new float[fp.size()];
 		for (int i = 0; i < forwardPathsDeltas.length; i++) {
 			forwardPathsDeltas[i] = this.getDeltaForGivenForwardPath(fp.get(i), nonRL, com);
-		}*/
+		}
 
 		result.append("Forward paths:\n");
 		for (int i = 0; i < fp.size(); i++) {
@@ -162,7 +162,7 @@ public class SFG implements SFGI {
 		}
 
 		result.append("\nLoops:\n");
-		/*for (int i = 0; i < nonRL.size(); i++) {
+		for (int i = 0; i < nonRL.size(); i++) {
 			float loopGain = this.getLoopGain(nonRL.get(i));
 			nonRL.get(i).add(nonRL.get(i).get(0));
 			result.append(nonRL.get(i) + " gain: " + loopGain + "\n");
@@ -186,7 +186,7 @@ public class SFG implements SFGI {
 		}
 
 		result.append("\nOverallGain: \n");
-		result.append(OverallGain);*/
+		result.append(OverallGain);
 
 		return result.toString();
 		
