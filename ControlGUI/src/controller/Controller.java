@@ -47,7 +47,9 @@ public class Controller implements Initializable {
 	private Polygon arrowEffect;
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		
+		calculateResult.setOnAction(e -> {
+			SFGAdapter sfg = new SFGAdapter(numberOfNode, allNodes);
+		});
 	}
 
 	public void paneClicked(MouseEvent e) {
