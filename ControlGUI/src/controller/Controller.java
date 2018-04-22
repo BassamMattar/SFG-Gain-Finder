@@ -13,6 +13,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.MouseEvent;
@@ -33,7 +34,7 @@ public class Controller implements Initializable {
 	public AnchorPane pane;
 	public ToggleGroup drawMode;
 	public Button calculateResult;
-	
+	public TextArea screen;
 	private ArrayList<Node> allNodes = new ArrayList<>();
 	private ArrayList<Edge> forwardPathes = new ArrayList<>();
 	private ArrayList<Edge> fpPathes = new ArrayList<>();
@@ -49,6 +50,9 @@ public class Controller implements Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
 		calculateResult.setOnAction(e -> {
 			SFGAdapter sfg = new SFGAdapter(numberOfNode, allNodes);
+			ArrayList<ArrayList<Integer>> forwardpathes = sfg.getAllForwarPaths();
+			ArrayList<ArrayList<Integer>> allLoops = sfg.getAllLoops();
+			screen.setText(forwardpathes.toString() + allLoops.toString());
 		});
 	}
 
@@ -136,7 +140,13 @@ public class Controller implements Initializable {
 		temp.setIndex(numberOfNode++);
 		temp.setAbsY(e.getScreenY());
 		allNodes.add(temp);
-		pane.getChildren().add(temp);
+		Label nodeName = new Label();
+		nodeName.setText(temp.getName());
+		int offsetX = (int) (nodeRadius * 2);
+		int offsetY = (int) (nodeRadius + 5);
+		nodeName.setLayoutX(temp.getCenterX() - offsetX);
+		nodeName.setLayoutY(temp.getCenterY() + offsetY);
+		pane.getChildren().addAll(temp,nodeName);
 	}
 	
 	private void handleforwardpath() {

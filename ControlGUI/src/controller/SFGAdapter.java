@@ -22,8 +22,6 @@ public class SFGAdapter {
 						parentNode.getIncidentEdges().get(i).getGainValue());
 			}
 		}
-		sfg.getAllForwardPaths();
-		sfg.getAllLoops();
 	}	
 	
 	public ArrayList<ArrayList<Integer>> getAllForwarPaths() {
