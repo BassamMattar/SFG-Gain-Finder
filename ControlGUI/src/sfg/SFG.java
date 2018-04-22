@@ -141,4 +141,54 @@ public class SFG implements SFGI {
 		}
 		return numeratorOfMansonFormula / this.getDeltaGain(nonRepeatedLoops, nonTouchingLoops);
 	}
+
+	@Override
+	public String getResult() {
+		StringBuilder result = new StringBuilder();
+		ArrayList<ArrayList<Integer>> fp = this.getAllForwardPaths();
+		ArrayList<ArrayList<Integer>> nonRL = this.getAllLoops();
+		ArrayList<ArrayList<Integer>>[] com = this.getAllNoneTouchingLoops(nonRL);
+		float OverallGain = this.getOverAllGain(fp, nonRL, com);
+		float delta = this.getDeltaGain(nonRL, com);
+		float[] forwardPathsDeltas = new float[fp.size()];
+		for (int i = 0; i < forwardPathsDeltas.length; i++) {
+			forwardPathsDeltas[i] = this.getDeltaForGivenForwardPath(fp.get(i), nonRL, com);
+		}
+
+		result.append("Forward paths:\n");
+		for (int i = 0; i < fp.size(); i++) {
+			result.append(fp.get(i) + " gain: ");
+			result.append(this.getForwardPathGain(fp.get(i)) + "\n");
+		}
+
+		result.append("\nLoops:\n");
+		for (int i = 0; i < nonRL.size(); i++) {
+			float loopGain = this.getLoopGain(nonRL.get(i));
+			nonRL.get(i).add(nonRL.get(i).get(0));
+			result.append(nonRL.get(i) + " gain: " + loopGain + "\n");
+		}
+
+		result.append("\nAll non touching combinations:\n");
+		for (int i = 0; i < com.length; i++) {
+			ArrayList<ArrayList<Integer>> c = com[i];
+			result.append("\nGroups of " + (i + 2) + " non touching loops:\n");
+			for (int j = 0; j < c.size(); j++) {
+				result.append(c.get(j));
+			}
+		}
+
+		result.append("\n\nDelta: \n");
+		result.append(delta);
+
+		result.append("\n\nDelta's gains\n");
+		for (int i = 0; i < forwardPathsDeltas.length; i++) {
+			result.append("Delta (" + (i + 1) + ") gain : " + forwardPathsDeltas[i] + "\n");
+		}
+
+		result.append("\nOverallGain: \n");
+		result.append(OverallGain);
+
+		return result.toString();
+		
+	}
 }

@@ -19,6 +19,8 @@ public interface SFGI {
     public float getForwardPathGain(ArrayList<Integer> forwardPath);
 
     public float getLoopGain(ArrayList<Integer> loopPath);
+    
+    public String getResult();
 
     public float getDeltaGain (ArrayList<ArrayList<Integer>> nonRepeatedLoops, ArrayList<ArrayList<Integer>>[] nonTouchingLoops);
 
