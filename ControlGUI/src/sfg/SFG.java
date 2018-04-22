@@ -122,12 +122,14 @@ public class SFG implements SFGI {
 	private float getGainOfNextNodeById(int nodeId, int nextNodeId) {
 		float gain = 0;
 		ArrayList<Node> adjacencyListOfGivenNood = sfg.getAdjacencyListOf(nodeId);
-		for (Node node : adjacencyListOfGivenNood) {
+		for (int i = 0; i < adjacencyListOfGivenNood.size(); i++) {
+			Node node = adjacencyListOfGivenNood.get(i);
 			if (node.getNextNodeId() == nextNodeId) {
 				gain = node.getNextNodeGain();
 				break;
 			}
 		}
+		System.out.println(gain);
 		return gain;
 	}
 

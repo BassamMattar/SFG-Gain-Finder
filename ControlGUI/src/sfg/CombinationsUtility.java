@@ -3,12 +3,13 @@ package sfg;
 import java.util.ArrayList;
 
 public class CombinationsUtility {
-	//returns all combinations bigger than 1 and smaller than n
+	//returns all combinations bigger than 1
 	@SuppressWarnings("unchecked")
 	public ArrayList<ArrayList<Integer>>[] getAllCombinationsOfN(int n) {
-		ArrayList<ArrayList<Integer>>[] allCombinations = new ArrayList[n - 1];// remember negative index for simple case 2 nodes
-		//aha i forget to tell you that you calculate the parallel paths as the same !!!
-		//Sajed for hard cases only ^_^
+		if (n == 0) { // Handle the case when there are no loops.
+			n++;
+		}
+		ArrayList<ArrayList<Integer>>[] allCombinations = new ArrayList[n - 1];
     	for (int i = 0; i < allCombinations.length; i++) {
 			allCombinations[i] = new ArrayList<ArrayList<Integer>>();
 		}
