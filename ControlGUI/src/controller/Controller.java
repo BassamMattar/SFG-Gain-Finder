@@ -13,6 +13,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
@@ -35,6 +36,7 @@ public class Controller implements Initializable {
 	public ToggleGroup drawMode;
 	public Button calculateResult;
 	public TextArea screen;
+	public MenuItem newProblem;
 	private ArrayList<Node> allNodes = new ArrayList<>();
 	private ArrayList<Edge> forwardPathes = new ArrayList<>();
 	private ArrayList<Edge> fpPathes = new ArrayList<>();
@@ -51,6 +53,16 @@ public class Controller implements Initializable {
 		calculateResult.setOnAction(e -> {
 			SFGAdapter sfg = new SFGAdapter(numberOfNode, allNodes);
 			screen.setText(sfg.getResult());
+		});
+		newProblem.setOnAction(e -> {
+			pane.getChildren().clear();
+			allNodes.clear();
+			forwardPathes.clear();
+			fpPathes.clear();
+			numberOfNode = 0;
+			numberOfEdges = 0;
+			numberOfFPEdges = 0;
+			screen.clear();
 		});
 	}
 
