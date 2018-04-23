@@ -111,18 +111,6 @@ public class SFG implements SFGI {
 		return this.getDeltaGain(nonRepeatedLoopsNonTouchingForwardPath, nonTouchingLoopsNonTouchingForwardPath);
 	}
 
-//	private float getGainOfNextNodeById(int nodeId, int nextNodeId) {
-//		float gain = 0;
-//		ArrayList<Node> adjacencyListOfGivenNood = sfg.getAdjacencyListOf(nodeId);
-//		for (Node node : adjacencyListOfGivenNood) {
-//			if (node.getNextNodeId() == nextNodeId) {
-//				gain = node.getNextNodeGain();
-//				break;
-//			}
-//		}
-//		return gain;
-//	}
-
 	@Override
 	public float getOverAllGain(ArrayList<ArrayList<Integer>> forwardPaths,
 			ArrayList<ArrayList<Integer>> nonRepeatedLoops, ArrayList<ArrayList<Integer>>[] nonTouchingLoops) {
