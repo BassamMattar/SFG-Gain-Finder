@@ -8,27 +8,32 @@ public class PathsUtility {
 	private SFG sfg;
 	private ArrayList<ArrayList<Integer>> forwardPaths;
 	private ArrayList<ArrayList<Integer>> loopsOfCertainNode;
+	private ArrayList<Float> forwardPathsGain;
+	private ArrayList<Float> loopsGain;
+	private final float INITIAL_GAIN = 1;
 
 	public PathsUtility(SFG sfg) {
 		this.sfg = sfg;
 	}
 
 	public ArrayList<ArrayList<Integer>> getAllForwardPaths() {
+		this.forwardPathsGain = new ArrayList<Float>();
 		forwardPaths = new ArrayList<ArrayList<Integer>>();
 		boolean[] isVisited = new boolean[this.sfg.size()];
 		ArrayList<Integer> pathList = new ArrayList<Integer>();
 		pathList.add(sfg.getSOURCE_NOOD());
-		getAllPaths(sfg.getSOURCE_NOOD(), sfg.getSINK_NOOD(), isVisited, pathList);
+		getAllPaths(sfg.getSOURCE_NOOD(), sfg.getSINK_NOOD(), isVisited, pathList, INITIAL_GAIN);
 		return forwardPaths;
 	}
 
 	@SuppressWarnings("unchecked")
 	public ArrayList<ArrayList<Integer>>[] getAllLoops() {
+		loopsGain = new ArrayList<Float>();
 		ArrayList<ArrayList<Integer>>[] loops;
 		loops = new ArrayList[sfg.size()];
 		for (int i = 0; i < sfg.size(); i++) {
 			loopsOfCertainNode = new ArrayList<ArrayList<Integer>>();
-			loops[i] = getAllLoopsForCertainNode(i);
+			loops[i] = getAllLoopsForCertainNode(i, INITIAL_GAIN);
 		}
 		return loops;
 	}
@@ -44,6 +49,8 @@ public class PathsUtility {
 			hashMap.put(loopToBeSorted.toString(), null);
 			nonRepeatedLoops.add(loopsOfCertainNode.get(i));
 		}
+		int offset = allLoops[0].size();
+		int numOfRemovedItems = 0;
 		for (int i = 1; i < allLoops.length; i++) {
 			loopsOfCertainNode = allLoops[i];
 			for (int j = 0; j < loopsOfCertainNode.size(); j++) {
@@ -52,10 +59,18 @@ public class PathsUtility {
 				if (!hashMap.containsKey(loopToBeSorted.toString())) {
 					hashMap.put(loopToBeSorted.toString(), null);
 					nonRepeatedLoops.add(loopsOfCertainNode.get(j));
+				} else {
+					this.loopsGain.remove(offset + j - numOfRemovedItems);
+					numOfRemovedItems++;
 				}
 			}
+			offset += allLoops[i].size();
 		}
 		return nonRepeatedLoops;
+	}
+
+	public ArrayList<Float> getLoopsGain() {
+		return loopsGain;
 	}
 
 	public ArrayList<ArrayList<Integer>>[] getAllNoneTouchingLoops(ArrayList<ArrayList<Integer>> allNoneRepeatedLoops) {
@@ -108,44 +123,52 @@ public class PathsUtility {
 		return touching;
 	}
 
-	private ArrayList<ArrayList<Integer>> getAllLoopsForCertainNode(int nodeId) {
+	private ArrayList<ArrayList<Integer>> getAllLoopsForCertainNode(int nodeId, float loopGain) {
 		boolean[] isVisited = new boolean[this.sfg.size()];
 		ArrayList<Integer> pathList = new ArrayList<Integer>();
 		pathList.add(nodeId);
-		getLoopsOfNode(nodeId, nodeId, isVisited, pathList);
+		getLoopsOfNode(nodeId, nodeId, isVisited, pathList, INITIAL_GAIN);
 		return loopsOfCertainNode;
 	}
 
 	@SuppressWarnings("unchecked")
-	private void getAllPaths(Integer source, Integer sink, boolean[] isVisited, ArrayList<Integer> localPathList) {
+	private void getAllPaths(Integer source, Integer sink, boolean[] isVisited, ArrayList<Integer> localPathList, float pathGain) {
 		isVisited[source] = true;
 		if (source.equals(sink)) {
 			this.forwardPaths.add((ArrayList<Integer>) localPathList.clone());
+			this.forwardPathsGain.add(pathGain);
 		}
 		ArrayList<Node> currentNoodSuccessors = sfg.getAdjacencyListOf(source);
 		for (Node nextNode : currentNoodSuccessors) {
 			if (!isVisited[nextNode.getNextNodeId()]) {
 				localPathList.add(nextNode.getNextNodeId());
-				getAllPaths(nextNode.getNextNodeId(), sink, isVisited, localPathList);
+				float nextPathGain = pathGain * nextNode.getNextNodeGain();
+				getAllPaths(nextNode.getNextNodeId(), sink, isVisited, localPathList, nextPathGain);
 				localPathList.remove(localPathList.size() - 1);
 			}
 		}
 		isVisited[source] = false;
 	}
 
+	public ArrayList<Float> getForwardPathsGain() {
+		return forwardPathsGain;
+	}
+
 	@SuppressWarnings("unchecked")
-	private void getLoopsOfNode(Integer source, Integer sink, boolean[] isVisited, ArrayList<Integer> localPathList) {
+	private void getLoopsOfNode(Integer source, Integer sink, boolean[] isVisited, ArrayList<Integer> localPathList, float loopGain) {
 		isVisited[source] = true;
 		ArrayList<Node> currentNoodSuccessors = sfg.getAdjacencyListOf(source);
 		for (Node nextNode : currentNoodSuccessors) {
 			if (!isVisited[nextNode.getNextNodeId()]) {
 
 				localPathList.add(nextNode.getNextNodeId());
-				getLoopsOfNode(nextNode.getNextNodeId(), sink, isVisited, localPathList);
+				float nextLoopGain = loopGain * nextNode.getNextNodeGain();
+				getLoopsOfNode(nextNode.getNextNodeId(), sink, isVisited, localPathList, nextLoopGain);
 				localPathList.remove(localPathList.size() - 1);
 
 			} else if (sink.equals(nextNode.getNextNodeId())) {
 				this.loopsOfCertainNode.add((ArrayList<Integer>) localPathList.clone());
+				this.loopsGain.add(loopGain * nextNode.getNextNodeGain());
 			}
 		}
 		isVisited[source] = false;

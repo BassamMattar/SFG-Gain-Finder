@@ -16,9 +16,9 @@ public interface SFGI {
 
     public ArrayList<ArrayList<Integer>>[] getAllNoneTouchingLoops(ArrayList<ArrayList<Integer>> allNoneRepeatedLoops);
   
-    public float getForwardPathGain(ArrayList<Integer> forwardPath);
+    public float getForwardPathGain(int pathID);
 
-    public float getLoopGain(ArrayList<Integer> loopPath);
+    public float getLoopGain(int loopID);
     
     public String getResult();
 

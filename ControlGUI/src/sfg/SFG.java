@@ -64,21 +64,13 @@ public class SFG implements SFGI {
 	}
 
 	@Override
-	public float getForwardPathGain(ArrayList<Integer> forwardPath) {
-		float pathGain = 1;
-		for (int i = 0; i < forwardPath.size() - 1; i++) {
-			pathGain *= getGainOfNextNodeById(forwardPath.get(i), forwardPath.get(i + 1));
-		}
-		return pathGain;
+	public float getForwardPathGain(int pathID) {
+		return pathUtility.getForwardPathsGain().get(pathID);
 	}
 
 	@Override
-	public float getLoopGain(ArrayList<Integer> loopPath) {
-		float loopGain = 1;
-		for (int i = 0; i < loopPath.size(); i++) {
-			loopGain *= getGainOfNextNodeById(loopPath.get(i), loopPath.get((i + 1) % loopPath.size()));
-		}
-		return loopGain;
+	public float getLoopGain(int loopID) {
+		return pathUtility.getLoopsGain().get(loopID);
 	}
 
 	@Override
@@ -88,7 +80,7 @@ public class SFG implements SFGI {
 		float sign = -1;
 		float loopGainSum = 0;
 		for (int i = 0; i < nonRepeatedLoops.size(); i++) {
-			loopGainSum += this.getLoopGain(nonRepeatedLoops.get(i));
+			loopGainSum += this.getLoopGain(i);
 		}
 		deltaGain += loopGainSum * sign;
 
@@ -100,7 +92,7 @@ public class SFG implements SFGI {
 				ArrayList<Integer> multileLoops = multipleLoopsCombination.get(j);
 				float multipleLoopsGain = 1;
 				for (Integer loopId : multileLoops) {
-					multipleLoopsGain *= this.getLoopGain(nonRepeatedLoops.get(loopId));
+					multipleLoopsGain *= this.getLoopGain(loopId);
 				}
 				multipleLoopsCombinationGain += multipleLoopsGain;
 			}
@@ -119,27 +111,27 @@ public class SFG implements SFGI {
 		return this.getDeltaGain(nonRepeatedLoopsNonTouchingForwardPath, nonTouchingLoopsNonTouchingForwardPath);
 	}
 
-	private float getGainOfNextNodeById(int nodeId, int nextNodeId) {
-		float gain = 0;
-		ArrayList<Node> adjacencyListOfGivenNood = sfg.getAdjacencyListOf(nodeId);
-		for (int i = 0; i < adjacencyListOfGivenNood.size(); i++) {
-			Node node = adjacencyListOfGivenNood.get(i);
-			if (node.getNextNodeId() == nextNodeId) {
-				gain = node.getNextNodeGain();
-				break;
-			}
-		}
-		System.out.println(gain);
-		return gain;
-	}
+//	private float getGainOfNextNodeById(int nodeId, int nextNodeId) {
+//		float gain = 0;
+//		ArrayList<Node> adjacencyListOfGivenNood = sfg.getAdjacencyListOf(nodeId);
+//		for (Node node : adjacencyListOfGivenNood) {
+//			if (node.getNextNodeId() == nextNodeId) {
+//				gain = node.getNextNodeGain();
+//				break;
+//			}
+//		}
+//		return gain;
+//	}
 
 	@Override
 	public float getOverAllGain(ArrayList<ArrayList<Integer>> forwardPaths,
 			ArrayList<ArrayList<Integer>> nonRepeatedLoops, ArrayList<ArrayList<Integer>>[] nonTouchingLoops) {
 		float numeratorOfMansonFormula = 0;
+		int pathID = 0;
 		for (ArrayList<Integer> forwardPath : forwardPaths) {
-			numeratorOfMansonFormula += this.getForwardPathGain(forwardPath)
+			numeratorOfMansonFormula += this.getForwardPathGain(pathID)
 					* this.getDeltaForGivenForwardPath(forwardPath, nonRepeatedLoops, nonTouchingLoops);
+		pathID++;
 		}
 		return numeratorOfMansonFormula / this.getDeltaGain(nonRepeatedLoops, nonTouchingLoops);
 	}
@@ -160,12 +152,12 @@ public class SFG implements SFGI {
 		result.append("Forward paths:\n");
 		for (int i = 0; i < fp.size(); i++) {
 			result.append(fp.get(i) + " gain: ");
-			result.append(this.getForwardPathGain(fp.get(i)) + "\n");
+			result.append(this.getForwardPathGain(i) + "\n");
 		}
 
 		result.append("\nLoops:\n");
 		for (int i = 0; i < nonRL.size(); i++) {
-			float loopGain = this.getLoopGain(nonRL.get(i));
+			float loopGain = this.getLoopGain(i);
 			nonRL.get(i).add(nonRL.get(i).get(0));
 			result.append(nonRL.get(i) + " gain: " + loopGain + "\n");
 		}

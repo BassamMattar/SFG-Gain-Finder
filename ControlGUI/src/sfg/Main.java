@@ -10,6 +10,9 @@ public class Main {
         SFGI g = new SFG(2);
         g.connectXToY(0,1, 2);
         g.connectXToY(0,1, 5);
+        g.connectXToY(0,0, 6);
+        g.connectXToY(0, 0, 7);
+
 //        g.connectXToY(2,3 ,3);
 //        g.connectXToY(3,4 ,4);
 //        g.connectXToY(4,5 ,5);
