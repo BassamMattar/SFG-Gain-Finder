@@ -162,20 +162,23 @@ public class Controller implements Initializable {
 	private void handleforwardpath() {
 		if(forwardStep == 2) {
 			forwardStep = 0;
-			
+			Edge temp = new Edge();
 			if(forwardPathNodeVisited[0].getCenterX() > forwardPathNodeVisited[1].getCenterX()) {
-				Node temp = forwardPathNodeVisited[0];
-				forwardPathNodeVisited[0] = forwardPathNodeVisited[1];
-				forwardPathNodeVisited[1] = temp;
+				temp.setFill(Color.TRANSPARENT);
+				temp.setStroke(Color.BLACK);
+				temp.setCordinates((int)forwardPathNodeVisited[0].getCenterX() - (int)nodeRadius, (int)forwardPathNodeVisited[0].getCenterY()
+						, (int)forwardPathNodeVisited[1].getCenterX() + (int)nodeRadius, (int)forwardPathNodeVisited[1].getCenterY());
+			}else{
+				temp.setFill(Color.TRANSPARENT);
+				temp.setStroke(Color.BLACK);
+				temp.setCordinates((int)forwardPathNodeVisited[0].getCenterX() + (int)nodeRadius, (int)forwardPathNodeVisited[0].getCenterY()
+						, (int)forwardPathNodeVisited[1].getCenterX() - (int)nodeRadius, (int)forwardPathNodeVisited[1].getCenterY());
 			}
 			
 			
-			Edge temp = new Edge();
 			
-			temp.setFill(Color.TRANSPARENT);
-			temp.setStroke(Color.BLACK);
-			temp.setCordinates((int)forwardPathNodeVisited[0].getCenterX() + (int)nodeRadius, (int)forwardPathNodeVisited[0].getCenterY()
-					, (int)forwardPathNodeVisited[1].getCenterX() - (int)nodeRadius, (int)forwardPathNodeVisited[1].getCenterY());
+			
+			
 			
 			
 			
