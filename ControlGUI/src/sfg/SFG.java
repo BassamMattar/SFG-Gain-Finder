@@ -27,6 +27,13 @@ public class SFG implements SFGI {
 
 	@Override
 	public void connectXToY(int x, int y, float gain) {
+		ArrayList<Node> adjList = sfg.getAdjacencyListOf(x);
+		for (Node node : adjList) {
+			if (node.getNextNodeId() == y) {
+				node.setNextNodeGain(node.getNextNodeGain() + gain);
+				return;
+			}
+		}
 		sfg.connectXToY(x, y, gain);
 	}
 
