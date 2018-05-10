@@ -22,6 +22,7 @@ public class InputBox {
 		valid = false;
 		if(window == null) {
 			window = new Stage();
+			window.initModality(Modality.APPLICATION_MODAL);
 		}
 		window.setTitle(title);
 		
@@ -55,8 +56,7 @@ public class InputBox {
 		
 		Scene scene = new Scene(layout);
 		window.setScene(scene);
-		
-		//window.show();		
+		window.showAndWait();		
 	}
 	
 	public static String getInput() {
