@@ -62,13 +62,14 @@ public class InputBox {
 	public static String getInput() {
 		String input = userInput.getText();
 		userInput.clear();
-		return input;
+		return String.valueOf(Integer.parseInt(input));
 	}
 	
 	public static void checkInput(String message, String title, String action,String prompt) {
 		String input = userInput.getText();
 			try {
 				Integer.parseInt(input);
+				
 				valid = true;
 			} catch (Exception e) {
 				valid = false;
