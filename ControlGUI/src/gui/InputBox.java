@@ -1,7 +1,6 @@
 package gui;
 
 
-import java.awt.Window;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
