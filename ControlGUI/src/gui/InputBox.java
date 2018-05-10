@@ -62,7 +62,7 @@ public class InputBox {
 	public static String getInput() {
 		String input = userInput.getText();
 		userInput.clear();
-		return String.valueOf(Integer.parseInt(input));
+		return String.valueOf(Float.parseFloat(input));
 	}
 	
 	public static void checkInput(String message, String title, String action,String prompt) {
