@@ -56,7 +56,7 @@ public class InputBox {
 		Scene scene = new Scene(layout);
 		window.setScene(scene);
 		
-		window.show();		
+		//window.show();		
 	}
 	
 	public static String getInput() {
