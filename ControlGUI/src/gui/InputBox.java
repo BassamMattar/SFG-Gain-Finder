@@ -17,10 +17,15 @@ import javafx.stage.Stage;
 public class InputBox {
 	private static TextField userInput = new TextField();
 	private static Stage window;
+	private static boolean valid = false;
 	public static void getInput(String message, String title, String action,String prompt) {
-		window = new Stage();
+		valid = false;
+		if(window == null) {
+			window = new Stage();
+			window.initModality(Modality.APPLICATION_MODAL);
+		}
 		window.setTitle(title);
-		window.initModality(Modality.APPLICATION_MODAL);
+		
 		window.setMinWidth(100);
 		userInput.setPromptText(prompt);
 		
@@ -28,11 +33,15 @@ public class InputBox {
 		
 		submit.setOnAction(e -> {
 			checkInput(message,title,action,prompt);
-			window.close();
+			if(valid)
+				window.close();
 		});
 		
 		window.setOnCloseRequest(e -> {
+			e.consume();
 			checkInput(message,title,action,prompt);
+			if(valid)
+				window.close();
 		});
 		
 		HBox hBox = new HBox(10);
@@ -60,9 +69,9 @@ public class InputBox {
 		String input = userInput.getText();
 			try {
 				Integer.parseInt(input);
+				valid = true;
 			} catch (Exception e) {
-				window.close();
-				getInput(message, title, action, prompt);
+				valid = false;
 			}
 		
 	}
