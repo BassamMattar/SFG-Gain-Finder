@@ -22,7 +22,6 @@ public class InputBox {
 		valid = false;
 		if(window == null) {
 			window = new Stage();
-			window.initModality(Modality.APPLICATION_MODAL);
 		}
 		window.setTitle(title);
 		
