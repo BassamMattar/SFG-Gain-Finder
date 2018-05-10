@@ -68,7 +68,7 @@ public class InputBox {
 	public static void checkInput(String message, String title, String action,String prompt) {
 		String input = userInput.getText();
 			try {
-				Integer.parseInt(input);
+				Float.parseFloat(input);
 				
 				valid = true;
 			} catch (Exception e) {
