@@ -87,7 +87,9 @@ public class SFG implements SFGI {
 		float sign = -1;
 		float loopGainSum = 0;
 		for (int i = 0; i < nonRepeatedLoops.size(); i++) {
-			loopGainSum += this.getLoopGain(i);
+			if (!nonRepeatedLoops.get(i).isEmpty()) {
+				loopGainSum += this.getLoopGain(i);
+			}
 		}
 		deltaGain += loopGainSum * sign;
 
@@ -115,6 +117,7 @@ public class SFG implements SFGI {
 				.removeLoopsTouchingTheForwardPath(forwardPath, nonRepeatedLoops);
 		ArrayList<ArrayList<Integer>>[] nonTouchingLoopsNonTouchingForwardPath = pathUtility
 				.removeMultipleLoopsTouchingTheForwardPath(forwardPath, nonRepeatedLoops, nonTouchingLoops);
+
 		return this.getDeltaGain(nonRepeatedLoopsNonTouchingForwardPath, nonTouchingLoopsNonTouchingForwardPath);
 	}
 

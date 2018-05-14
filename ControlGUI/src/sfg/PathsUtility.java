@@ -195,10 +195,12 @@ public class PathsUtility {
 		ArrayList<ArrayList<Integer>> nonRepeatedLoopsWithoutTouchingForwardPath = (ArrayList<ArrayList<Integer>>) nonRepeatedLoops
 				.clone();
 
+		for (int i = 0; i < nonRepeatedLoops.size(); i++) {
+			nonRepeatedLoopsWithoutTouchingForwardPath.set(i, (ArrayList<Integer>)nonRepeatedLoops.get(i).clone());
+		}
 		for (int i = 0; i < nonRepeatedLoopsWithoutTouchingForwardPath.size(); i++) {
 			if (isTouchingTheForwardPath(forwardPath, nonRepeatedLoopsWithoutTouchingForwardPath.get(i))) {
-				nonRepeatedLoopsWithoutTouchingForwardPath.remove(i);
-				i--;
+				nonRepeatedLoopsWithoutTouchingForwardPath.get(i).clear();
 			}
 		}
 
