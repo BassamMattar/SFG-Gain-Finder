@@ -82,7 +82,7 @@ public class SFG implements SFGI {
 
 	@Override
 	public float getDeltaGain(ArrayList<ArrayList<Integer>> nonRepeatedLoops,
-			ArrayList<ArrayList<Integer>>[] nonTouchingLoops) {
+							  ArrayList<ArrayList<Integer>>[] nonTouchingLoops) {
 		float deltaGain = 1;
 		float sign = -1;
 		float loopGainSum = 0;
@@ -112,7 +112,7 @@ public class SFG implements SFGI {
 
 	@Override
 	public float getDeltaForGivenForwardPath(ArrayList<Integer> forwardPath,
-			ArrayList<ArrayList<Integer>> nonRepeatedLoops, ArrayList<ArrayList<Integer>>[] nonTouchingLoops) {
+											 ArrayList<ArrayList<Integer>> nonRepeatedLoops, ArrayList<ArrayList<Integer>>[] nonTouchingLoops) {
 		ArrayList<ArrayList<Integer>> nonRepeatedLoopsNonTouchingForwardPath = pathUtility
 				.removeLoopsTouchingTheForwardPath(forwardPath, nonRepeatedLoops);
 		ArrayList<ArrayList<Integer>>[] nonTouchingLoopsNonTouchingForwardPath = pathUtility
@@ -123,13 +123,13 @@ public class SFG implements SFGI {
 
 	@Override
 	public float getOverAllGain(ArrayList<ArrayList<Integer>> forwardPaths,
-			ArrayList<ArrayList<Integer>> nonRepeatedLoops, ArrayList<ArrayList<Integer>>[] nonTouchingLoops) {
+								ArrayList<ArrayList<Integer>> nonRepeatedLoops, ArrayList<ArrayList<Integer>>[] nonTouchingLoops) {
 		float numeratorOfMansonFormula = 0;
 		int pathID = 0;
 		for (ArrayList<Integer> forwardPath : forwardPaths) {
 			numeratorOfMansonFormula += this.getForwardPathGain(pathID)
 					* this.getDeltaForGivenForwardPath(forwardPath, nonRepeatedLoops, nonTouchingLoops);
-		pathID++;
+			pathID++;
 		}
 		return numeratorOfMansonFormula / this.getDeltaGain(nonRepeatedLoops, nonTouchingLoops);
 	}
@@ -181,6 +181,6 @@ public class SFG implements SFGI {
 		result.append(OverallGain);
 
 		return result.toString();
-		
+
 	}
 }

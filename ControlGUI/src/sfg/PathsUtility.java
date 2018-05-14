@@ -40,33 +40,64 @@ public class PathsUtility {
 
 	@SuppressWarnings("unchecked")
 	public ArrayList<ArrayList<Integer>> removeDuplicatedLoops(ArrayList<ArrayList<Integer>>[] allLoops) {
+		//Already removed, just arranging all loops.
 		ArrayList<ArrayList<Integer>> nonRepeatedLoops = new ArrayList<ArrayList<Integer>>();
-		ArrayList<ArrayList<Integer>> loopsOfCertainNode = allLoops[0];
-		HashMap<String, String> hashMap = new HashMap<String, String>();
-		for (int i = 0; i < loopsOfCertainNode.size(); i++) {
-			ArrayList<Integer> loopToBeSorted = (ArrayList<Integer>) loopsOfCertainNode.get(i).clone();
-			Collections.sort(loopToBeSorted);
-			hashMap.put(loopToBeSorted.toString(), null);
-			nonRepeatedLoops.add(loopsOfCertainNode.get(i));
-		}
-		int offset = allLoops[0].size();
-		int numOfRemovedItems = 0;
-		for (int i = 1; i < allLoops.length; i++) {
+		for (int i = 0; i < allLoops.length; i++) {
 			loopsOfCertainNode = allLoops[i];
 			for (int j = 0; j < loopsOfCertainNode.size(); j++) {
-				ArrayList<Integer> loopToBeSorted = (ArrayList<Integer>) loopsOfCertainNode.get(j).clone();
-				Collections.sort(loopToBeSorted);
-				if (!hashMap.containsKey(loopToBeSorted.toString())) {
-					hashMap.put(loopToBeSorted.toString(), null);
 					nonRepeatedLoops.add(loopsOfCertainNode.get(j));
-				} else {
-					this.loopsGain.remove(offset + j - numOfRemovedItems);
-					numOfRemovedItems++;
-				}
 			}
-			offset += allLoops[i].size();
 		}
+//		ArrayList<ArrayList<Integer>> loopsOfCertainNode = allLoops[0];
+//		HashMap<String, String> hashMap = new HashMap<String, String>();
+//		for (int i = 0; i < loopsOfCertainNode.size(); i++) {
+//			ArrayList<Integer> loopToBeSorted = (ArrayList<Integer>) loopsOfCertainNode.get(i).clone();
+//			Collections.sort(loopToBeSorted);
+//			hashMap.put(loopToBeSorted.toString(), null);
+//			nonRepeatedLoops.add(loopsOfCertainNode.get(i));
+//		}
+//		int offset = allLoops[0].size();
+//		int numOfRemovedItems = 0;
+//		for (int i = 1; i < allLoops.length; i++) {
+//			loopsOfCertainNode = allLoops[i];
+//			for (int j = 0; j < loopsOfCertainNode.size(); j++) {
+//				ArrayList<Integer> loopToBeSorted = (ArrayList<Integer>) loopsOfCertainNode.get(j).clone();
+//				Collections.sort(loopToBeSorted);
+//				if (!hashMap.containsKey(loopToBeSorted.toString())) {
+//					hashMap.put(loopToBeSorted.toString(), null);
+//					nonRepeatedLoops.add(loopsOfCertainNode.get(j));
+//				} else {
+//					this.loopsGain.remove(offset + j - numOfRemovedItems);
+//					numOfRemovedItems++;
+//				}
+//			}
+//			offset += allLoops[i].size();
+//		}
 		return nonRepeatedLoops;
+	}
+	
+	private void shift(ArrayList<Integer> loopToBeShifted) {
+		if (loopToBeShifted.size() == 0) {
+			return;
+		}
+		int min = loopToBeShifted.get(0);
+		int minIndex = 0;
+		for (int i = 0; i < loopToBeShifted.size(); i++) {
+			if (loopToBeShifted.get(i) < min) {
+				min = loopToBeShifted.get(i);
+				minIndex = i;
+			}
+		}
+		ArrayList<Integer> shiftedLoop = new ArrayList<Integer>();
+		for (int i = 0; i < loopToBeShifted.size(); i++) {
+			shiftedLoop.add((minIndex + i) % loopToBeShifted.size());
+		}
+
+		int index = 0;
+		for (Integer integer : shiftedLoop) {
+			loopToBeShifted.set(index, integer);
+			index++;
+		}
 	}
 
 	public ArrayList<Float> getLoopsGain() {
@@ -127,7 +158,7 @@ public class PathsUtility {
 		boolean[] isVisited = new boolean[this.sfg.size()];
 		ArrayList<Integer> pathList = new ArrayList<Integer>();
 		pathList.add(nodeId);
-		getLoopsOfNode(nodeId, nodeId, isVisited, pathList, INITIAL_GAIN);
+		getLoopsOfNode(nodeId, nodeId, isVisited, pathList, INITIAL_GAIN, nodeId);
 		return loopsOfCertainNode;
 	}
 
@@ -155,15 +186,15 @@ public class PathsUtility {
 	}
 
 	@SuppressWarnings("unchecked")
-	private void getLoopsOfNode(Integer source, Integer sink, boolean[] isVisited, ArrayList<Integer> localPathList, float loopGain) {
+	private void getLoopsOfNode(Integer source, Integer sink, boolean[] isVisited, ArrayList<Integer> localPathList, float loopGain, int startingNode) {
 		isVisited[source] = true;
 		ArrayList<Node> currentNoodSuccessors = sfg.getAdjacencyListOf(source);
 		for (Node nextNode : currentNoodSuccessors) {
-			if (!isVisited[nextNode.getNextNodeId()]) {
+			if (!isVisited[nextNode.getNextNodeId()] && nextNode.getNextNodeId() >= startingNode) {
 
 				localPathList.add(nextNode.getNextNodeId());
 				float nextLoopGain = loopGain * nextNode.getNextNodeGain();
-				getLoopsOfNode(nextNode.getNextNodeId(), sink, isVisited, localPathList, nextLoopGain);
+				getLoopsOfNode(nextNode.getNextNodeId(), sink, isVisited, localPathList, nextLoopGain, startingNode);
 				localPathList.remove(localPathList.size() - 1);
 
 			} else if (sink.equals(nextNode.getNextNodeId())) {
@@ -177,15 +208,20 @@ public class PathsUtility {
 	public boolean isTouchingTheForwardPath(ArrayList<Integer> forwardPath, ArrayList<Integer> pathToCompareWith) {
 		boolean touching = false;
 		HashMap<Integer, String> hashMap = new HashMap<Integer, String>();
+//		System.out.println("===PATH===");
+//		System.out.println(forwardPath);
 		for (Integer nodeId : forwardPath) {
 			hashMap.put(nodeId, null);
 		}
+//		System.out.println("====LOOP===");
+//		System.out.println(pathToCompareWith);
 		for (Integer nodeId : pathToCompareWith) {
 			if (hashMap.containsKey(nodeId)) {
 				touching = true;
 				break;
 			}
 		}
+//		System.out.println("===FFFFF===" + touching);
 		return touching;
 	}
 
@@ -194,16 +230,18 @@ public class PathsUtility {
 			ArrayList<ArrayList<Integer>> nonRepeatedLoops) {
 		ArrayList<ArrayList<Integer>> nonRepeatedLoopsWithoutTouchingForwardPath = (ArrayList<ArrayList<Integer>>) nonRepeatedLoops
 				.clone();
-
 		for (int i = 0; i < nonRepeatedLoops.size(); i++) {
 			nonRepeatedLoopsWithoutTouchingForwardPath.set(i, (ArrayList<Integer>)nonRepeatedLoops.get(i).clone());
 		}
+
 		for (int i = 0; i < nonRepeatedLoopsWithoutTouchingForwardPath.size(); i++) {
+//			System.out.println(nonRepeatedLoopsWithoutTouchingForwardPath.get(i));
 			if (isTouchingTheForwardPath(forwardPath, nonRepeatedLoopsWithoutTouchingForwardPath.get(i))) {
 				nonRepeatedLoopsWithoutTouchingForwardPath.get(i).clear();
 			}
 		}
-
+//		System.out.println("===============================");
+		
 		return nonRepeatedLoopsWithoutTouchingForwardPath;
 	}
 
